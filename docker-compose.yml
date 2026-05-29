@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: habitbot
+      POSTGRES_PASSWORD: habitbot
+      POSTGRES_DB: habitbot
+    ports:
+      - "5432:5432"
+    volumes:
+      - habitbot_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habitbot -d habitbot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  habitbot_pgdata:

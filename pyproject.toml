@@ -1,0 +1,57 @@
+[project]
+name = "habitbot"
+version = "2.0.0"
+description = "AI-coach habit tracker for Telegram (diploma project)"
+requires-python = ">=3.11"
+dependencies = [
+    "aiogram>=3.15.0",
+    "sqlalchemy[asyncio]>=2.0.30",
+    "asyncpg>=0.29.0",
+    "aiosqlite>=0.20.0",
+    "alembic>=1.13.0",
+    "apscheduler>=3.10.4",
+    "ollama>=0.4.0",
+    "faster-whisper>=1.0.0",
+    "reportlab>=4.0.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.5.0",
+]
+
+[project.scripts]
+habitbot = "src.__main__:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "src/__main__.py",
+    "src/infrastructure/speech/*",         # тесты Whisper требуют модель — отдельный CI шаг
+    "src/infrastructure/llm/*",            # требуют API ключ
+    "src/presentation/handlers/*",          # хэндлеры через фейк-бот — отдельная подпапка тестов
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
